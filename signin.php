@@ -105,7 +105,7 @@ if( isset($_POST['login']) )
       <div class="row">
         <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
           <form method="POST" action="" class="form-signin">
-            <img class="mb-5" src="img/ini logo qodr doang.svg" alt="" width="100" />
+            <img class="mb-5" src="img/mp logorostchild.png" alt="" width="100" />
             <label for="inputUsername" class="sr-only">Username</label>
             <input
               type="text"

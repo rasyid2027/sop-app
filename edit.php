@@ -74,7 +74,7 @@ if (isset($_POST['submit'])) {
         <nav id="sidebar">
             <div class="sidebar-header">
                 <a class="sidebar-brand" href="#">
-                    <img src="img/Ni Logo dah Putih.svg" width="150" height="30" alt="" loading="lazy">
+                    <img src="img/mp logorostchild.png" width="70" alt="" loading="lazy">
                 </a>
             </div>
         </nav>
