@@ -1,194 +1,99 @@
-# markdown-js
+<a href="https://marked.js.org">
+  <img width="60px" height="60px" src="https://marked.js.org/img/logo-black.svg" align="right" />
+</a>
 
-Yet another markdown parser, this time for JavaScript. There's a few
-options that precede this project but they all treat markdown to HTML
-conversion as a single step process. You pass markdown in and get HTML
-out, end of story. We had some pretty particular views on how the
-process should actually look, which include:
+# Marked
 
-  * producing well-formed HTML. This means that `em` and `strong` nesting
-    is important, as is the ability to output as both HTML and XHTML
+[![npm](https://badgen.net/npm/v/marked)](https://www.npmjs.com/package/marked)
+[![gzip size](https://badgen.net/badgesize/gzip/https://cdn.jsdelivr.net/npm/marked/marked.min.js)](https://cdn.jsdelivr.net/npm/marked/marked.min.js)
+[![install size](https://badgen.net/packagephobia/install/marked)](https://packagephobia.now.sh/result?p=marked)
+[![downloads](https://badgen.net/npm/dt/marked)](https://www.npmjs.com/package/marked)
+[![github actions](https://github.com/markedjs/marked/workflows/Tests/badge.svg)](https://github.com/markedjs/marked/actions)
+[![snyk](https://snyk.io/test/npm/marked/badge.svg)](https://snyk.io/test/npm/marked)
 
-  * having an intermediate representation to allow processing of parsed
-    data (we in fact have two, both [JsonML]: a markdown tree and an HTML tree)
+- ⚡ built for speed
+- ⬇️ low-level compiler for parsing markdown without caching or blocking for long periods of time
+- ⚖️ light-weight while implementing all markdown features from the supported flavors & specifications
+- 🌐 works in a browser, on a server, or from a command line interface (CLI)
 
-  * being easily extensible to add new dialects without having to
-    rewrite the entire parsing mechanics
+## Demo
 
-  * having a good test suite. The only test suites we could find tested
-    massive blocks of input, and passing depended on outputting the HTML
-    with exactly the same whitespace as the original implementation
+Checkout the [demo page](https://marked.js.org/demo/) to see marked in action ⛹️
 
-[JsonML]: http://jsonml.org/ "JSON Markup Language"
+## Docs
+
+Our [documentation pages](https://marked.js.org) are also rendered using marked 💯
+
+Also read about:
+
+* [Options](https://marked.js.org/#/USING_ADVANCED.md)
+* [Extensibility](https://marked.js.org/#/USING_PRO.md)
+
+## Compatibility
+
+**Node.js:** Only [current and LTS](https://nodejs.org/en/about/releases/) Node.js versions are supported. End of life Node.js versions may become incompatible with Marked at any point in time.
+
+**Browser:** Not IE11 :)
 
 ## Installation
 
-Just the `markdown` library:
+**CLI:** 
 
-    npm install markdown
+```sh 
+npm install -g marked
+```
 
-Optionally, install `md2html` into your path
+**In-browser:** 
 
-    npm install -g markdown
+```sh
+npm install marked
+npm install @types/marked # For TypeScript projects
+```
 
 ## Usage
 
-### Node
+### Warning: 🚨 Marked does not [sanitize](https://marked.js.org/#/USING_ADVANCED.md#options) the output HTML. Please use a sanitize library, like [DOMPurify](https://github.com/cure53/DOMPurify) (recommended), [sanitize-html](https://github.com/apostrophecms/sanitize-html) or [insane](https://github.com/bevacqua/insane) on the *output* HTML! 🚨
 
-The simple way to use it with node is:
-
-```js
-var markdown = require( "markdown" ).markdown;
-console.log( markdown.toHTML( "Hello *World*!" ) );
+```
+DOMPurify.sanitize(marked.parse(`<img src="x" onerror="alert('not happening')">`));
 ```
 
-### Browser
+**CLI**
 
-It also works in a browser; here is a complete example:
+``` bash
+# Example with stdin input
+$ marked -o hello.html
+hello world
+^D
+$ cat hello.html
+<p>hello world</p>
+```
+
+```bash
+# Print all options
+$ marked --help
+```
+
+**Browser**
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html>
-  <body>
-    <textarea id="text-input" oninput="this.editor.update()"
-              rows="6" cols="60">Type **Markdown** here.</textarea>
-    <div id="preview"> </div>
-    <script src="lib/markdown.js"></script>
-    <script>
-      function Editor(input, preview) {
-        this.update = function () {
-          preview.innerHTML = markdown.toHTML(input.value);
-        };
-        input.editor = this;
-        this.update();
-      }
-      var $ = function (id) { return document.getElementById(id); };
-      new Editor($("text-input"), $("preview"));
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8"/>
+  <title>Marked in the browser</title>
+</head>
+<body>
+  <div id="content"></div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    document.getElementById('content').innerHTML =
+      marked.parse('# Marked in the browser\n\nRendered by **marked**.');
+  </script>
+</body>
 </html>
 ```
 
-### Command line
+## License
 
-Assuming you've installed the `md2html` script (see Installation,
-above), you can convert markdown to html:
-
-```bash
-# read from a file
-md2html /path/to/doc.md > /path/to/doc.html
-
-# or from stdin
-echo 'Hello *World*!' | md2html
-```
-
-### More options
-
-If you want more control check out the documentation in
-[lib/markdown.js] which details all the methods and parameters
-available (including examples!). One day we'll get the docs generated
-and hosted somewhere for nicer browsing.
-
-[lib/markdown.js]: http://github.com/evilstreak/markdown-js/blob/master/lib/markdown.js
-
-Meanwhile, here's an example of using the multi-step processing to
-make wiki-style linking work by filling in missing link references:
-
-```js
-var md = require( "markdown" ).markdown,
-    text = "[Markdown] is a simple text-based [markup language]\n" +
-           "created by [John Gruber]\n\n" +
-           "[John Gruber]: http://daringfireball.net";
-
-// parse the markdown into a tree and grab the link references
-var tree = md.parse( text ),
-    refs = tree[ 1 ].references;
-
-// iterate through the tree finding link references
-( function find_link_refs( jsonml ) {
-  if ( jsonml[ 0 ] === "link_ref" ) {
-    var ref = jsonml[ 1 ].ref;
-
-    // if there's no reference, define a wiki link
-    if ( !refs[ ref ] ) {
-      refs[ ref ] = {
-        href: "http://en.wikipedia.org/wiki/" + ref.replace(/\s+/, "_" )
-      };
-    }
-  }
-  else if ( Array.isArray( jsonml[ 1 ] ) ) {
-    jsonml[ 1 ].forEach( find_link_refs );
-  }
-  else if ( Array.isArray( jsonml[ 2 ] ) ) {
-    jsonml[ 2 ].forEach( find_link_refs );
-  }
-} )( tree );
-
-// convert the tree into html
-var html = md.renderJsonML( md.toHTMLTree( tree ) );
-console.log( html );
-```
-
-## Intermediate Representation
-
-Internally the process to convert a chunk of markdown into a chunk of
-HTML has three steps:
-
- 1. Parse the markdown into a JsonML tree. Any references found in the
-    parsing are stored in the attribute hash of the root node under the
-    key `references`.
-
- 2. Convert the markdown tree into an HTML tree. Rename any nodes that
-    need it (`bulletlist` to `ul` for example) and lookup any references
-    used by links or images. Remove the references attribute once done.
-
- 3. Stringify the HTML tree being careful not to wreck whitespace where
-    whitespace is important (surrounding inline elements for example).
-
-Each step of this process can be called individually if you need to do
-some processing or modification of the data at an intermediate stage.
-For example, you may want to grab a list of all URLs linked to in the
-document before rendering it to HTML which you could do by recursing
-through the HTML tree looking for `a` nodes.
-
-## Running tests
-
-To run the tests under node you will need tap installed (it's listed as a
-`devDependencies` so `npm install` from the checkout should be enough), then do
-
-    $ npm test
-
-## Contributing
-
-Do the usual github fork and pull request dance. Add yourself to the
-contributors section of [package.json](/package.json) too if you want to.
-
-## License
-
-Released under the MIT license.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-ANY CHANGESS
-
-
-## emoji
-
-:smile:
-:wave:
+Copyright (c) 2011-2022, Christopher Jeffrey. (MIT License)
