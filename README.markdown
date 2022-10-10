@@ -1,3 +1,26 @@
+# SOP App
+
+Sop App is a SOP (Standard Operationl Procedure) generator for your companies.
+
+### Build with
+
+<img align="left" alt="Visual Studio Code" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/visual-studio-code/visual-studio-code.png" />
+<img align="left" alt="HTML" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png" />
+<img align="left" alt="CSS" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/css/css.png" />
+<img align="left" alt="Bootsrap" width="30px" src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo-shadow.png" />
+<img align="left" alt="PHP" width="30px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/php/php.png" />
+<img align="left" alt="JavaScript" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/javascript/javascript.png" />
+<img align="left" alt="Markdown" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/markdown/markdown.png" />
+
+</br>
+
+#### Please login with this account (for test)
+
+- username : admin
+- password : admin
+
+
+---
 <a href="https://marked.js.org">
   <img width="60px" height="60px" src="https://marked.js.org/img/logo-black.svg" align="right" />
 </a>
